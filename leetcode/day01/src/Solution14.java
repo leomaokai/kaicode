@@ -1,4 +1,7 @@
 import java.util.Arrays;
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class Solution14 {
 
@@ -95,6 +98,67 @@ public class Solution14 {
     }
 
     /**
-     *
+     * 647. 回文子串
+     * 中心扩展/动态规划
      */
+    public int countSubstrings(String s) {
+        // int ans=0;
+        // char[] chars=s.toCharArray();
+        // int len=chars.length;
+        // // 中心扩散
+        // // 回文串分为奇数和偶数
+        // // 每一个字符遍历两次
+        // // 第一次为奇数,第二次偶数
+        // for(int i=0;i<2*len-1;i++){
+        //     // 中心左起始位置
+        //     int left=i/2;
+        //     // 中心右起始位置
+        //     int right=i/2+i%2;
+        //     while(left>=0 && right<len && chars[left]==chars[right]){
+        //         left--;
+        //         right++;
+        //         ans++;
+        //     }
+        // }
+        // return ans;
+
+        // 动态规划
+        int ans = 0;
+        int len = s.length();
+        // dp[i][j] 表示[i,j]的字符是否为回文子串
+        boolean[][] dp = new boolean[len][len];
+        char[] chars = s.toCharArray();
+        for (int i = len - 1; i >= 0; i--) {
+            for (int j = i; j < len; j++) {
+                if (chars[i] == chars[j] && (j - i <= 2 || dp[i + 1][j - 1])) {
+                    dp[i][j] = true;
+                    ans++;
+                }
+            }
+        }
+        Deque<Integer> stack = new LinkedList<>();
+        stack.push(1);
+        stack.push(2);
+
+        return ans;
+    }
+
+    /**
+     * 739. 每日温度
+     * 单调栈
+     */
+    public int[] dailyTemperatures(int[] T) {
+        // 单调栈
+        int len = T.length;
+        int[] res = new int[len];
+        Deque<Integer> stack = new LinkedList<>();
+        for (int i = 0; i < len; i++) {
+            while (!stack.isEmpty() && T[i] > T[stack.peek()]) {
+                int topIndex = stack.pop();
+                res[topIndex] = i - topIndex;
+            }
+            stack.push(i);
+        }
+        return res;
+    }
 }
